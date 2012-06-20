@@ -4,8 +4,8 @@ require File.expand_path('../lib/dilation/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Jim Deville"]
   gem.email         = ["james.deville@gmail.com"]
-  gem.description   = %q{Control the rate of time for tests}
-  gem.summary       = %q{Control the rate of time}
+  gem.description   = %q{A controllable timer}
+  gem.summary       = %q{A controllable timer}
   gem.homepage      = "http://github.com/jredville/dilation"
 
   gem.files         = `git ls-files`.split($\)
@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('celluloid')
   gem.add_development_dependency('rake', '~> 0.9.2')
   gem.add_development_dependency('rspec')
+  gem.add_development_dependency('pry')
 end
