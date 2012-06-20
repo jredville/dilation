@@ -1,8 +1,17 @@
 require 'dilation/test_support/handler'
 
-shared_examples "a core event" do |event_name, trigger|
+shared_context "core event" do
   let(:handler) { Dilation::TestSupport::Handler.new }
   let(:handler2) { Dilation::TestSupport::Handler.new }
+end
+
+shared_examples "a core event" do |event_name, trigger|
+  it_behaves_like "a core event details", event_name, trigger
+  it_behaves_like "a core event details", event_name, "__#{trigger}"
+end
+
+shared_examples "a core event details" do |event_name, trigger|
+  include_context "core event"
 
   it "can trigger without handlers" do
     expect { subject.send trigger }.to_not raise_error

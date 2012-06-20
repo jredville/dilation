@@ -1,16 +1,17 @@
 module Dilation
   module TestSupport
     class Handler
+      attr_reader :count
       def initialize
-        @triggered = false
+        @count = 0
       end
 
       def call
-        @triggered = true
+        @count += 1
       end
 
       def triggered?
-        @triggered
+        @count > 0
       end
     end
   end

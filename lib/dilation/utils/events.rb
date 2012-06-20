@@ -17,11 +17,11 @@ module Dilation
         self.handlers = Hash.new { |h, k| h[k] = [] }
       end
 
-      private
       def fire(name)
         handlers[name].each &:call
       end
 
+      private
       attr_writer :handlers
       def handlers
         @handlers || clear_all
@@ -31,6 +31,7 @@ module Dilation
         def event(*names)
           names.each do |name|
             define_method(name) { fire name }
+            alias_method :"__#{name}", name
           end
         end
       end
