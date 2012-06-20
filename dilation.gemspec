@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "dilation"
   gem.require_paths = ["lib"]
   gem.version       = Dilation::VERSION
+  gem.add_dependency('celluloid')
   gem.add_development_dependency('rake', '~> 0.9.2')
   gem.add_development_dependency('rspec')
 end
