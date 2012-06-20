@@ -1,4 +1,5 @@
 require_relative 'utils/events'
+require_relative 'utils/counter'
 module Dilation
   class Core
     include Utils::Events
@@ -6,26 +7,21 @@ module Dilation
 
     attr_writer :timer_source
     def initialize
-      dilate(1)
-      @count = 0
+      @counter = Utils::Counter.new
     end
 
     def dilate(factor = 1)
-      @contraction = 1
-      @dilation = factor
+      @counter.factor = factor
+      @counter.invert
     end
 
     def contract(factor = 1)
-      @dilation = 1
-      @contraction = factor
+      @counter.factor = factor
+      @counter.uninvert
     end
 
     def tick
-      @count += 1
-      if @count == @dilation
-        @contraction.times { __tick }
-        @count = 0
-      end
+      @counter.run { __tick }
     end
 
     def start
