@@ -6,20 +6,26 @@ describe Dilation::Utils::Counter do
     @blk = lambda { @counter += 1 }
   end
 
-  context "when uninverted" do
-    it { subject.should_not be_inverted }
-
+  shared_examples "an inverter" do
     it "inverts" do
-      expect { subject.invert }.to change { subject.inverted? }
+      subject.invert
+      subject.should be_inverted
     end
 
-    it "doesn't uninvert" do
-      expect { subject.uninvert }.not_to change { subject.inverted? }
+    it "uninverts" do
+      subject.uninvert
+      subject.should_not be_inverted
     end
 
     it "defaults to 1 run per tick" do
       expect { |b| subject.run(&b) }.to yield_control
     end
+  end
+
+  context "when uninverted" do
+    it_behaves_like "an inverter"
+
+    it { subject.should_not be_inverted }
 
     it "runs n times per tick if factor is set to n" do
       subject.factor = 2
@@ -41,15 +47,9 @@ describe Dilation::Utils::Counter do
       subject.invert
     end
 
+    it_behaves_like "an inverter"
+
     it { subject.should be_inverted }
-
-    it "inverts" do
-      expect { subject.invert }.not_to change { subject.inverted? }
-    end
-
-    it "doesn't uninvert" do
-      expect { subject.uninvert }.to change { subject.inverted? }
-    end
 
     it "runs once every n times if factor is set to n and object is inverted" do
       subject.factor = 3

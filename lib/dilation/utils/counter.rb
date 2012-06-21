@@ -3,26 +3,30 @@ module Dilation
     class Counter
       attr_writer :factor
       def initialize
-        @count = 0
-        @factor = 1
-        @invert = false
+        self.factor = 1
       end
 
       def factor=(val)
         @factor = val
-        @count = 0
+        reset
       end
 
       def invert
         @invert = true
+        reset
       end
 
       def uninvert
         @invert = false
+        reset
       end
 
       def inverted?
-        @invert
+        defined?(@invert) && @invert
+      end
+
+      def reset
+        @count = 0
       end
 
       def run(&blk)

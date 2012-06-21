@@ -1,6 +1,9 @@
+require 'celluloid'
+
 module Dilation
   module Timers
-    class Test
+    class Coarse
+      include Celluloid
       def initialize(target)
         @target = target
       end
@@ -15,10 +18,12 @@ module Dilation
 
       def stop
         @started = false
+        defined?(@timer) && @timer.cancel
       end
 
       def start
         @started = true
+        @timer = every(1) { tick }
       end
     end
   end

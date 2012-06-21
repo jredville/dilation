@@ -1,5 +1,7 @@
 require_relative 'utils/events'
 require_relative 'utils/counter'
+require_relative 'timers/coarse'
+
 module Dilation
   class Core
     include Utils::Events
@@ -21,21 +23,29 @@ module Dilation
     end
 
     def tick
-      @counter.run { __tick }
+      if started?
+        @counter.run { __tick }
+      end
     end
 
     def start
       timer.start
+      @started = true
       __start
     end
 
     def stop
       timer.stop
+      @started = false
       __stop
     end
 
     def timer
       @timer ||= timer_source.call(self)
+    end
+
+    def started?
+      defined?(@started) && @started
     end
 
     private

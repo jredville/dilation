@@ -18,7 +18,7 @@ module Dilation
       end
 
       def fire(name)
-        handlers[name].each &:call
+        handlers[name].each(&:call)
       end
 
       private
