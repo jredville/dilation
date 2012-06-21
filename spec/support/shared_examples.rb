@@ -28,6 +28,31 @@ shared_examples "a core event details" do |event_name, trigger|
     expect { subject.send trigger }.to trigger(handler).and_also(handler2)
   end
 
+  it "listen_for requires a block or a handler" do
+    expect { subject.listen_for event_name }.to raise_error ArgumentError
+  end
+
+  it "listen_for ignores the block if a handler is given" do
+    subject.listen_for event_name, handler do
+      handler2.call
+    end
+    expect { subject.send trigger }.to trigger(handler).but_not(handler2)
+  end
+
+  it "can subscribe to a block" do
+    subject.listen_for event_name do
+      handler.call
+    end
+    expect { subject.send trigger }.to trigger(handler)
+  end
+
+  it "can clear a listener" do
+    subject.listen_for event_name, handler
+    subject.listen_for event_name, handler2
+    subject.dont_listen_for event_name, handler2
+    expect { subject.send trigger }.to trigger(handler).but_not(handler2)
+  end
+
   it "works after clearing listeners" do
     subject.listen_for event_name, handler
     subject.clear event_name

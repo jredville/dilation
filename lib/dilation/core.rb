@@ -40,6 +40,19 @@ module Dilation
       __stop
     end
 
+    def sleep(time)
+      sleep_handler = lambda { time -= 1}
+      listen_for :tick, sleep_handler
+      __sleep
+      start
+      while time > 0
+      end
+      stop
+      wake
+    ensure
+      dont_listen_for :tick, sleep_handler
+    end
+
     def timer
       @timer ||= timer_source.call(self)
     end

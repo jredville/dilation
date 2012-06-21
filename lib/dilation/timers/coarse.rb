@@ -1,5 +1,7 @@
 require 'celluloid'
 
+Celluloid.logger = nil
+
 module Dilation
   module Timers
     class Coarse
