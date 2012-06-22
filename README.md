@@ -65,13 +65,13 @@ Or install it yourself as:
 
 ## Usage
 
-The [rubydoc.info docs](http://rubydoc.info/gems/dilation/frames) contain
-API documentation. The API docs contain detailed info about all of Dilation's public API.
+The [rubydoc.info docs][api] contain API documentation. The API docs contain 
+detailed info about all of Dilation's public API.
 
 ## Release Policy
 
 Dilation follows the principles of [semantic versioning](http://semver.org/).
-The [API documentation](http://rubydoc.info/gems/dilation/frames) define
+The [API documentation][api] define
 Dilation's public API.  Patch level releases contain only bug fixes.  Minor
 releases contain backward-compatible new features.  Major new releases
 contain backwards-incompatible changes to the public API.
@@ -107,6 +107,7 @@ yard server --reload
    * Rubinius
  * make Celluloid optional
  * ability to override Kernel#sleep
+ * Switch to the Rubygem API link
 
 ## Thanks
 
@@ -117,3 +118,5 @@ yard server --reload
 
 Copyright (c) 2010-2012 Jim Deville. Released under the terms of the
 MIT license. See LICENSE for details.
+
+[api]: http://rubydoc.info/github/jredville/dilation/master/frames
