@@ -49,8 +49,6 @@ c.stop
 puts 'ok'
 ```
 
-TODO
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -99,17 +97,16 @@ yard server --reload
 
 ## Todo
 
-* Better interface to swap backend
-* dilation/test_support
-* [Code Climate](http://codeclimate.com)
-* [Travis](http://travis-ci.org/)
-** test on interpreters
-*** 1.8.7
-*** 1.9.3
-*** REE
-*** Rubinius
-* make Celluloid optional
-* ability to override Kernel#sleep
+ * Better interface to swap backend
+ * dilation/test_support
+ * [Code Climate](http://codeclimate.com)
+ * [Travis](http://travis-ci.org/)
+   * 1.8.7
+   * 1.9.3
+   * REE
+   * Rubinius
+ * make Celluloid optional
+ * ability to override Kernel#sleep
 
 ## Thanks
 
