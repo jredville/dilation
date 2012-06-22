@@ -2,6 +2,8 @@
 
 A timer that provides an event based interface to hook into for your app. In addition, the back end timer can be swapped out, so for testing, you can control the passage of time.  
 
+[![Build Status](https://secure.travis-ci.org/jredville/dilation.png)](http://travis-ci.org/jredville/dilation)
+
 ## Synopsis
 
 ``` ruby
