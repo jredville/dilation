@@ -1,6 +1,6 @@
-require 'dilation/utils/counter'
+require 'dilation/utils/dilator'
 
-describe Dilation::Utils::Counter do
+describe Dilation::Utils::Dilator do
   before do
     @counter = 0
     @blk = lambda { @counter += 1 }

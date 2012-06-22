@@ -1,25 +1,13 @@
+require_relative 'timer'
+
 module Dilation
   module Timers
-    class Test
-      def initialize(target)
-        @target = target
-      end
-
-      def tick
-        @target.tick
-      end
-
-      def running?
-        defined?(@started) && @started
-      end
-
-      def stop
-        @started = false
-      end
-
-      def start
-        @started = true
-      end
+    # A test timer that does not fire by itself. Primarily meant to
+    # be used inside of tests so you can control the passage of time
+    #
+    # @author Jim Deville <james.deville@gmail.com>
+    # @todo make this default for tests
+    class Test < Timer
     end
   end
 end

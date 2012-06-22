@@ -43,6 +43,10 @@ describe Dilation::Core do
       subject.stop
       expect { timer.tick }.not_to trigger(handler)
     end
+
+    it "ignores multiple start calls"
+    it "ignores multiple stop calls"
+    it "stop when not started is ignored"
   end
 
   context "timer" do
@@ -60,6 +64,13 @@ describe Dilation::Core do
     before do
       subject.listen_for :tick, handler
       subject.start
+    end
+
+    it "returns the new factor" do
+      subject.dilate.should == 1
+      subject.dilate(2).should == 2
+      subject.contract.should == 1
+      subject.contract(2).should == 2
     end
 
     it "receives one tick per tick of the timer by default" do
@@ -122,9 +133,9 @@ describe Dilation::Core do
       it_behaves_like "a core event", :stop, :stop
     end
 
-    context "sleep" do
-      it_behaves_like "a core event", :sleep, :sleep
-    end
+    # context "sleep" do
+    #   it_behaves_like "a core event", :sleep, :sleep
+    # end
 
     context "wake" do
       it_behaves_like "a core event", :wake, :wake

@@ -1,31 +1,27 @@
 require 'celluloid'
+require_relative 'timer'
 
 Celluloid.logger = nil
 
 module Dilation
   module Timers
-    class Coarse
+    # A Celluloid based timer that is the default for Dilation::Core
+    # @see http://celluloid.io/
+    #
+    # @author Jim Deville <james.deville@gmail.com>
+    class Coarse < Timer
       include Celluloid
-      def initialize(target)
-        @target = target
-      end
 
-      def tick
-        @target.tick
-      end
-
-      def running?
-        defined?(@started) && @started
-      end
-
+      # Stop this timer
       def stop
-        @started = false
         defined?(@timer) && @timer.cancel
+        super
       end
 
+      # Start this timer, ticking every second
       def start
-        @started = true
         @timer = every(1) { tick }
+        super
       end
     end
   end

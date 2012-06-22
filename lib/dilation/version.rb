@@ -1,3 +1,4 @@
 module Dilation
-  VERSION = "0.0.1"
+  # The version of this library
+  VERSION = "0.0.2"
 end
