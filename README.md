@@ -82,7 +82,8 @@ contain backwards-incompatible changes to the public API.
 
 Dilation has been tested on the following ruby interpreters:
 
-* MRI 1.9.2
+* MRI 1.9.2-p320
+* MRI 1.9.3-p194
 
 ## Development
 
@@ -104,12 +105,10 @@ yard server --reload
 * [Code Climate](http://codeclimate.com)
 * [Travis](http://travis-ci.org/)
 ** test on interpreters
-*** 1.8.7
-*** 1.9.3
-*** REE
 *** Rubinius
 * make Celluloid optional
 * ability to override Kernel#sleep
+* 1.8.7 support (?)
 
 ## Thanks
 

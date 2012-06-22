@@ -3,4 +3,5 @@ bundler_args: --without extras
 script: "bundle exec rake --trace"
 rvm:
   - 1.9.2
+  - 1.9.3
 
