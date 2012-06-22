@@ -1,5 +1,4 @@
-require_relative 'utils/events'
-require_relative 'utils/dilator'
+require_relative 'utils'
 require_relative 'timers/coarse'
 
 module Dilation
@@ -14,6 +13,9 @@ module Dilation
 
     # @param [#call] value The factory for the timer
     attr_writer :timer_source
+
+    # @param [#call] value The factory for the sleeper
+    attr_writer :sleeper_source
 
     def initialize
       @dilator = Utils::Dilator.new
@@ -74,16 +76,18 @@ module Dilation
 
     # Starts the timer and fires the start event
     def start
-      timer.start
-      @started = true
-      __start
+      unless started?
+        timer.start
+        __start
+      end
     end
 
     # Stops the timer and fires the stop event
     def stop
-      timer.stop
-      @started = false
-      __stop
+      if started?
+        timer.stop
+        __stop
+      end
     end
 
     # Sleeps for `time` (based on Core#tick).
@@ -94,24 +98,23 @@ module Dilation
     #   core.sleep 5 #=> 5
     # @example Sleep for 1 second
     #   core.sleep #=> 1
+    #
     # @overload sleep(time)
     #   Sleep for the given number of second
     #   @param [Number] time the time to sleep for in seconds
     # @overload sleep
     #   Sleep for 1 second
+    #
     # @return [Number] time
     def sleep(time=1)
-      sleep_handler = lambda { time -= 1}
-      listen_for :tick, sleep_handler
-      __sleep
-      start
-      while time > 0
+      sleeper.with(self) do |sleeper|
+        start
+        __sleep
+        sleeper.wait(time)
+        wake
+        stop
       end
-      stop
-      wake
       time
-    ensure
-      dont_listen_for :tick, sleep_handler
     end
 
     # @return [Timer] the timer object for this core
@@ -121,13 +124,24 @@ module Dilation
       @timer ||= timer_source.call(self)
     end
 
+    # @return [#with] the sleeper object for this core
+    #
+    # @see Dilation::Utils::Sleeper
+    def sleeper
+      @sleeper ||= sleeper_source.call
+    end
+
     # @todo does this need to be public?
     # @return [Boolean] is this core started or not
     def started?
-      defined?(@started) && @started
+      timer.running?
     end
 
     private
+    def sleeper_source
+      @sleeper_source ||= lambda { Utils::Sleeper.new }
+    end
+
     def timer_source
       @timer_source ||= lambda { |obj| Timers::Coarse.new(obj) }
     end

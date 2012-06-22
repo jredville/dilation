@@ -1,27 +1,46 @@
 require 'spec_mini'
 require 'dilation/core'
 require 'dilation/timers/test'
+require 'dilation/utils/test_sleeper'
 
 describe Dilation::Core do
   let(:core) { Dilation::Core.new }
   let(:timer) { Dilation::Timers::Test.new(subject) }
+  let(:sleeper) { Dilation::Utils::TestSleeper.new }
 
   include_context "core event"
 
   subject do
     core.tap do |c|
       c.timer_source = lambda { |o| timer }
+      c.sleeper_source = lambda { sleeper }
     end
   end
 
-  context "starting and stopping" do
-    before do
-      subject.listen_for :tick, handler
-    end
-
+  context "starting" do
     it "starts timer when start is called" do
       timer.should_receive(:start)
       subject.start
+    end
+
+    it "gets ticks after timer is started" do
+      subject.listen_for :tick, handler
+
+      subject.start
+      expect { timer.tick }.to trigger(handler)
+    end
+
+    it "ignores multiple start calls" do
+      subject.listen_for :start, handler
+      subject.start
+      subject.start
+      handler.count.should == 1
+    end
+  end
+
+  context "stopping" do
+    before do
+      timer.stub(:running?).and_return(true, false)
     end
 
     it "stops timer when stop is called" do
@@ -29,34 +48,37 @@ describe Dilation::Core do
       subject.stop
     end
 
-    it "does not get ticks before timer is started" do
-      expect { timer.tick }.not_to trigger(handler)
+    it "ignores multiple stop calls" do
+      timer.should_receive(:stop).once
+      subject.stop
+      subject.stop
     end
 
-    it "gets ticks after timer is started" do
+    it "stop when not started is ignored" do
+      timer.stub(:running? => false)
+      timer.should_not_receive(:stop)
+      subject.stop
+    end
+  end
+
+  context "timer" do
+    before do
+      subject.listen_for :tick, handler
+    end
+
+    it "gets tick called by the timer" do
       subject.start
       expect { timer.tick }.to trigger(handler)
+    end
+
+    it "does not get ticks before timer is started" do
+      expect { timer.tick }.not_to trigger(handler)
     end
 
     it "does not get ticks after timer is stopped" do
       subject.start
       subject.stop
       expect { timer.tick }.not_to trigger(handler)
-    end
-
-    it "ignores multiple start calls"
-    it "ignores multiple stop calls"
-    it "stop when not started is ignored"
-  end
-
-  context "timer" do
-    before do
-      subject.start
-    end
-
-    it "gets tick called by the timer" do
-      subject.listen_for :tick, handler
-      expect { timer.tick }.to trigger(handler)
     end
   end
 
@@ -130,12 +152,15 @@ describe Dilation::Core do
     end
 
     context "stop" do
+      before do
+        subject.start
+      end
       it_behaves_like "a core event", :stop, :stop
     end
 
-    # context "sleep" do
-    #   it_behaves_like "a core event", :sleep, :sleep
-    # end
+    context "sleep" do
+      it_behaves_like "a core event", :sleep, :sleep
+    end
 
     context "wake" do
       it_behaves_like "a core event", :wake, :wake
